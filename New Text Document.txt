@@ -1,1 +1,2 @@
+admin: admin@email.com
 adminpw: timur12345678
