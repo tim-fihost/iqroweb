@@ -9,7 +9,6 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-# Import your forms from the forms.py
 from forms import CreatePostForm, CreateRegisterForm, CreateLoginForm, CreateCommentForm
 
 
@@ -21,7 +20,6 @@ Bootstrap5(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-#Gravatar
 gravatar = Gravatar(app,
                     size=100,
                     rating='g',
@@ -70,9 +68,7 @@ class Comment(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     comment_author = relationship("User", back_populates="comments")
-    #Above code every time If I want to get info about user I guess 
-    #I can rely on it's relationship!
-    
+
     #***************Child Relationship*************#
     post_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
@@ -83,11 +79,6 @@ with app.app_context():
     db.create_all()
 #=================================
 #Working on login!
-    #this part can't be right with this logic I need to route it 
-    #-Proper database!
-    #So there fore instead of using 
-    #return User.get(user_id)
-    #I must give proper database source!
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User,user_id)
@@ -173,7 +164,6 @@ def show_post(post_id):
 @app.route("/new-post", methods=["GET", "POST"])
 @admin_only
 def add_new_post():
-    #Q2 decorator
     form = CreatePostForm()
     if form.validate_on_submit():
         new_post = BlogPost(
